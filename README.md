@@ -23,9 +23,16 @@ para ficheiros com tamanhos:
 
 ---
 
-## Requisitos
+## Ambiente
 
-Python 3.10+ (recomendado) e bibliotecas:
+### Com Conda (recomendado)
+
+```bash
+conda env create -f environment.yml
+conda activate assignment1_sp
+```
+
+### Com pip
 
 ```bash
 pip install cryptography numpy matplotlib
