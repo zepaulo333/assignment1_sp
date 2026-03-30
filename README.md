@@ -1,38 +1,49 @@
-# Assignment #1 - Cryptographic Performance Benchmark
+# Assignment 1 — Cryptographic Performance Benchmark
 
-Projeto da cadeira **Security and Privacy** para medir desempenho de:
-- **AES-256 CTR** (encrypt/decrypt)
-- **RSA-based** (encrypt/decrypt) com `H = SHA-256`
-- **SHA-256** (digest)
+This project was developed for the **Security and Privacy** course to benchmark and compare the performance of:
 
-para ficheiros com tamanhos:
-`8, 64, 512, 4096, 32768, 262144, 2097152` bytes.
+- **AES-256 in CTR mode** (encryption and decryption)
+- **RSA-based encryption scheme** with `H = SHA-256` (encryption and decryption)
+- **SHA-256** digest generation
 
----
+The benchmarks are executed for files with the following sizes (in bytes):
 
-## Estrutura
-
-- `main.py` - executa o fluxo completo
-- `files_generation.py` - gera ficheiros de teste
-- `crypto.py` - implementações criptográficas
-- `benchmark.py` - benchmarks e estatística (média + IC95)
-- `plot.py` - geração de gráfico (`benchmark_plot.png`)
-- `assignment1.pdf` - enunciado
-- `relatorio_assignment1.md` - relatório em Markdown
-- `mudancas_assignment1.txt` - registo das alterações
+`8, 64, 512, 4096, 32768, 262144, 2097152`
 
 ---
 
-## Ambiente
+## Project Structure
 
-### Com Conda (recomendado)
+- `main.py` — runs the full benchmark pipeline
+- `files_generation.py` — generates random test files
+- `crypto.py` — cryptographic implementations (AES, RSA-based, SHA-256)
+- `benchmark.py` — benchmark routines and statistics (mean + 95% confidence interval)
+- `plot.py` — creates benchmark plot (`benchmark_plot.png`)
+- `environment.yml` — Conda environment configuration
+- `assignment1.pdf` — assignment statement
+- `report_completo_assignment1.md` — full report
+
+---
+
+## Requirements
+
+- Python 3.11 (recommended)
+- `cryptography`
+- `numpy`
+- `matplotlib`
+
+---
+
+## Environment Setup
+
+### Option 1 — Conda (recommended)
 
 ```bash
 conda env create -f environment.yml
 conda activate assignment1_sp
 ```
 
-### Com pip
+### Option 2 — pip
 
 ```bash
 pip install cryptography numpy matplotlib
@@ -40,51 +51,58 @@ pip install cryptography numpy matplotlib
 
 ---
 
-## Como executar
+## How to Run
 
-No diretório `Trabalho1/Trabalho`:
+From the `Trabalho1/assignment1_sp/` directory:
 
 ```bash
 python3 main.py
 ```
 
-Isto vai:
-1. gerar os ficheiros de teste;
-2. correr benchmark de AES;
-3. correr benchmark extra do ponto B (mesmo ficheiro vs ficheiros aleatórios de tamanho fixo);
-4. correr benchmark RSA;
-5. correr benchmark SHA-256;
-6. gerar gráfico `benchmark_plot.png`;
-7. imprimir resumo da análise do ponto B no terminal.
+---
+
+## What the Program Does
+
+When executed, the program:
+
+1. Prints the experimental setup (OS, CPU, RAM, Python and library versions)
+2. Generates random test files in the required sizes
+3. Runs AES-256 CTR benchmark (encrypt/decrypt)
+4. Runs AES variability analysis (same file repeatedly vs random files of fixed size)
+5. Generates a 2048-bit RSA key pair and runs RSA-based benchmark
+6. Runs SHA-256 benchmark
+7. Generates the plot `benchmark_plot.png`
+8. Prints a summary of the extra variability analysis
 
 ---
 
-## Saídas esperadas
+## Output
 
-- Tabelas no terminal com médias e **IC 95%** para AES, RSA e SHA.
-- Tabela extra do ponto B:
-  - same-file mean ± CI
-  - random-files mean ± CI
-- Gráfico:
+Expected outputs include:
+
+- Console tables with:
+  - AES encryption/decryption mean times and 95% CI
+  - RSA-based encryption/decryption mean times and 95% CI
+  - SHA-256 mean times and 95% CI
+  - AES variability comparison (same file vs random files)
+- Plot file:
   - `benchmark_plot.png`
 
 ---
 
-## Conformidade com o assignment1.pdf
+## Notes
 
-- [x] Geração de ficheiros nos tamanhos exigidos
-- [x] AES-CTR 256-bit (encrypt/decrypt) com significância estatística
-- [x] Análise pedida no ponto B (mesmo ficheiro vs ficheiros aleatórios)
-- [x] RSA-based com SHA-256 (encrypt/decrypt) e benchmark
-- [x] SHA-256 benchmark
-- [x] Gráfico com X em bytes e Y em microsegundos
+- RSA-based benchmark can be significantly slower for large files.
+- Test files are generated in the `test_files/` directory.
+- The plot uses **log-log scale** (file size vs execution time in microseconds).
 
 ---
 
-## Notas
+## Assignment Compliance Summary
 
-- O benchmark RSA para ficheiros grandes pode demorar significativamente mais.
-- Para submissão, usar também:
-  - `relatorio_assignment1.md`
-  - `mudancas_assignment1.txt`
-  - código-fonte comprimido (conforme pedido no enunciado).
+- [x] Random file generation for required sizes
+- [x] AES-256 CTR encryption/decryption benchmark with statistical significance
+- [x] Required variability analysis for AES (same file vs random files)
+- [x] RSA-based scheme using SHA-256 benchmark
+- [x] SHA-256 digest benchmark
+- [x] Comparative performance plot with confidence intervals
