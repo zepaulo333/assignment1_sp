@@ -4,15 +4,6 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa as rsa_keygen
 
-def generate_rsa_keypair(key_size=2048):
-    private_key = rsa_keygen.generate_private_key(
-        public_exponent=65537,
-        key_size=key_size,
-        backend=default_backend()
-    )
-    pn = private_key.private_numbers()
-    return pn.public_numbers.e, pn.d, pn.public_numbers.n
-
 def aes_ctr_encrypt(key: bytes, nonce: bytes, plaintext: bytes) -> bytes:
     cipher = Cipher(algorithms.AES(key), modes.CTR(nonce), backend=default_backend())
     encryptor = cipher.encryptor()
@@ -23,6 +14,15 @@ def aes_ctr_decrypt(key: bytes, nonce: bytes, ciphertext: bytes) -> bytes:
     cipher = Cipher(algorithms.AES(key), modes.CTR(nonce), backend=default_backend())
     decryptor = cipher.decryptor()
     return decryptor.update(ciphertext) + decryptor.finalize()
+
+def generate_rsa_keypair(key_size=2048):
+    private_key = rsa_keygen.generate_private_key(
+        public_exponent=65537,
+        key_size=key_size,
+        backend=default_backend()
+    )
+    pn = private_key.private_numbers()
+    return pn.public_numbers.e, pn.d, pn.public_numbers.n
 
 def rsa_based_encrypt(plaintext: bytes, e: int, n: int):
     ell = 32 
