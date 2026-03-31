@@ -14,14 +14,18 @@ The benchmarks are executed for files with the following sizes (in bytes):
 
 ## Project Structure
 
-- `main.py` — runs the full benchmark pipeline
-- `files_generation.py` — generates random test files
-- `crypto.py` — cryptographic implementations (AES, RSA-based, SHA-256)
-- `benchmark.py` — benchmark routines and statistics (mean + 95% confidence interval)
-- `plot.py` — creates benchmark plot (`benchmark_plot.png`)
-- `environment.yml` — Conda environment configuration
-- `assignment1.pdf` — assignment statement
-- `report_completo_assignment1.md` — full report
+```
+assignment1_sp/
+├── main.py                      # runs the full benchmark pipeline
+├── crypto.py                    # cryptographic implementations (AES, RSA-based, SHA-256)
+├── benchmark.py                 # benchmark routines and statistics (mean + 95% CI)
+├── files_generation.py          # generates random test files
+├── plot.py                      # generates all benchmark plots
+├── environment.yml              # Conda environment configuration
+├── report.md                    # benchmark report
+├── test_files/                  # generated test files (created at runtime)
+└── plots/                       # generated plot images (created at runtime)
+```
 
 ---
 
@@ -52,8 +56,6 @@ pip install cryptography numpy matplotlib
 ---
 
 ## How to Run
-
-From the `Trabalho1/assignment1_sp/` directory:
 
 ```bash
 python3 main.py
@@ -100,14 +102,3 @@ Expected outputs include:
 - RSA-based benchmark can be significantly slower for large files.
 - Test files are generated in the `test_files/` directory.
 - The plot uses **log-log scale** (file size vs execution time in microseconds).
-
----
-
-## Assignment Compliance Summary
-
-- [x] Random file generation for required sizes
-- [x] AES-256 CTR encryption/decryption benchmark with statistical significance
-- [x] Required variability analysis for AES (same file vs random files)
-- [x] RSA-based scheme using SHA-256 benchmark
-- [x] SHA-256 digest benchmark
-- [x] Comparative performance plot with confidence intervals
