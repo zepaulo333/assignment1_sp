@@ -10,7 +10,7 @@ from crypto import (
 )
 
 N_RUNS = 200
-N_RANDOM_FILES = 100
+N_RANDOM_FILES = 200
 
 
 def _stats(times):
