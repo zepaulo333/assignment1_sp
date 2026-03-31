@@ -5,37 +5,38 @@ import subprocess
 
 from files_generation import generate_files
 from crypto import generate_rsa_keypair
-from benchmark import run_aes_benchmark, run_aes_variability_benchmark, run_rsa_benchmark, run_sha_benchmark
+from benchmark import (
+    run_aes_benchmark,
+    run_aes_variability_benchmark,
+    run_rsa_benchmark,
+    run_sha_benchmark,
+)
 from plot import plot_results
 
-
 def _get_total_ram():
-    # Linux preferred path
+    """Deteta a RAM total do sistema (funciona em Linux e macOS)."""
     if os.path.exists("/proc/meminfo"):
         try:
             with open("/proc/meminfo", "r", encoding="utf-8") as f:
                 for line in f:
                     if line.startswith("MemTotal:"):
                         kb = int(line.split()[1])
-                        gb = kb / (1024 * 1024)
-                        return f"{gb:.2f} GB"
+                        return f"{kb / (1024 * 1024):.2f} GB"
         except Exception:
             pass
-
-    # Fallback for other systems (if available)
     try:
         if platform.system() == "Darwin":
-            out = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True).strip()
-            gb = int(out) / (1024 ** 3)
-            return f"{gb:.2f} GB"
+            out = subprocess.check_output(
+                ["sysctl", "-n", "hw.memsize"], text=True
+            ).strip()
+            return f"{int(out) / (1024 ** 3):.2f} GB"
     except Exception:
         pass
-
     return "Unknown"
 
 
 def _get_cpu_model():
-    # Linux preferred path
+    """Deteta o modelo do CPU (funciona em Linux e macOS)."""
     if os.path.exists("/proc/cpuinfo"):
         try:
             with open("/proc/cpuinfo", "r", encoding="utf-8") as f:
@@ -44,64 +45,77 @@ def _get_cpu_model():
                         return line.split(":", 1)[1].strip()
         except Exception:
             pass
-
-    # Generic fallback
     return platform.processor() or "Unknown"
 
 
-def _print_experimental_setup():
+def print_experimental_setup():
+    """Imprime informação sobre o ambiente de execução (requisito do enunciado)."""
     try:
         import cryptography
-        cryptography_version = cryptography.__version__
+        crypto_ver = cryptography.__version__
     except Exception:
-        cryptography_version = "Unknown"
-
+        crypto_ver = "Unknown"
     try:
-        import numpy as np
-        numpy_version = np.__version__
+        import numpy
+        numpy_ver = numpy.__version__
     except Exception:
-        numpy_version = "Unknown"
-
+        numpy_ver = "Unknown"
     try:
         import matplotlib
-        matplotlib_version = matplotlib.__version__
+        mpl_ver = matplotlib.__version__
     except Exception:
-        matplotlib_version = "Unknown"
+        mpl_ver = "Unknown"
 
-    print("\n=== Experimental Setup (Assignment Requirement) ===")
-    print(f"Python version      : {sys.version.split()[0]}")
-    print(f"Operating system    : {platform.system()} {platform.release()}")
-    print(f"OS version/detail   : {platform.version()}")
-    print(f"Machine architecture: {platform.machine()}")
-    print(f"CPU model           : {_get_cpu_model()}")
-    print(f"CPU cores (logical) : {os.cpu_count()}")
-    print(f"Total RAM           : {_get_total_ram()}")
-    print(f"cryptography ver.   : {cryptography_version}")
-    print(f"numpy ver.          : {numpy_version}")
-    print(f"matplotlib ver.     : {matplotlib_version}")
-    print("===============================================\n")
-
+    print("=" * 55)
+    print("           EXPERIMENTAL SETUP")
+    print("=" * 55)
+    print(f"  Python version      : {sys.version.split()[0]}")
+    print(f"  Operating system    : {platform.system()} {platform.release()}")
+    print(f"  OS version          : {platform.version()}")
+    print(f"  Architecture        : {platform.machine()}")
+    print(f"  CPU model           : {_get_cpu_model()}")
+    print(f"  CPU cores (logical) : {os.cpu_count()}")
+    print(f"  Total RAM           : {_get_total_ram()}")
+    print(f"  cryptography lib    : {crypto_ver}")
+    print(f"  numpy lib           : {numpy_ver}")
+    print(f"  matplotlib lib      : {mpl_ver}")
+    print("=" * 55)
 
 def main():
-    _print_experimental_setup()
+    print_experimental_setup()
+
+    print("\n[A] Generating test files...")
     generate_files()
 
+    print("\n[B] Running AES-CTR benchmarks...")
     aes_results = run_aes_benchmark()
-    aes_variability_results = run_aes_variability_benchmark()
 
+    print("\n[B extra] Running AES variability analysis...")
+    aes_var_results = run_aes_variability_benchmark()
+
+    print("\n[C] Generating RSA-2048 keypair...")
     e, d, n = generate_rsa_keypair(2048)
+    print("    Keypair generated. Running RSA benchmarks...")
     rsa_results = run_rsa_benchmark(e, d, n)
 
+    print("\n[D] Running SHA-256 benchmarks...")
     sha_results = run_sha_benchmark()
 
+  
+    print("\n[E] Generating plots...")
     plot_results(aes_results, rsa_results, sha_results)
 
-    print("\n=== Assignment B extra analysis (same file vs random files, fixed size) ===")
-    for r in aes_variability_results:
+    print("\n" + "=" * 55)
+    print("  AES VARIABILITY ANALYSIS (Point B)")
+    print("=" * 55)
+    for r in aes_var_results:
         print(
-            f"Size {r['size']} B -> same-file mean: {r['same_mean']:.2f} µs (±{r['same_ci']:.2f}), "
-            f"random-files mean: {r['random_mean']:.2f} µs (±{r['random_ci']:.2f})"
+            f"  Size {r['size']:>7d} B | same-file: {r['same_mean']:8.2f} us "
+            f"(CI: +/-{r['same_ci']:.2f}) | random-files: {r['random_mean']:8.2f} us "
+            f"(CI: +/-{r['random_ci']:.2f})"
         )
+
+    print("\n=== All benchmarks completed successfully! ===")
 
 
 if __name__ == "__main__":
