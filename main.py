@@ -14,7 +14,7 @@ from benchmark import (
 from plot import plot_results
 
 def _get_total_ram():
-    """Deteta a RAM total do sistema (funciona em Linux e macOS)."""
+    """Deteta a RAM total do sistema."""
     if os.path.exists("/proc/meminfo"):
         try:
             with open("/proc/meminfo", "r", encoding="utf-8") as f:
@@ -36,7 +36,7 @@ def _get_total_ram():
 
 
 def _get_cpu_model():
-    """Deteta o modelo do CPU (funciona em Linux e macOS)."""
+    """Deteta o modelo do CPU."""
     if os.path.exists("/proc/cpuinfo"):
         try:
             with open("/proc/cpuinfo", "r", encoding="utf-8") as f:
@@ -49,7 +49,7 @@ def _get_cpu_model():
 
 
 def print_experimental_setup():
-    """Imprime informação sobre o ambiente de execução (requisito do enunciado)."""
+    """Imprime informação sobre o ambiente de execução."""
     try:
         import cryptography
         crypto_ver = cryptography.__version__
@@ -110,6 +110,6 @@ def main():
             f"(CI: +/-{r['same_ci']:.2f}) | random-files: {r['random_mean']:8.2f} us "
             f"(CI: +/-{r['random_ci']:.2f})"
         )
-        
+
 if __name__ == "__main__":
     main()
