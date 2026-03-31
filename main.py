@@ -92,9 +92,8 @@ def main():
     print("\n[B extra] AES variability analysis")
     aes_var_results = run_aes_variability_benchmark()
 
-    print("\n[C] Generating RSA-2048 keypair...")
+    print("\n[C]")
     e, d, n = generate_rsa_keypair(2048)
-    print("    RSA benchmarks...")
     rsa_results = run_rsa_benchmark(e, d, n)
 
     print("\n[D] SHA-256 benchmarks")
@@ -111,7 +110,6 @@ def main():
             f"(CI: +/-{r['same_ci']:.2f}) | random-files: {r['random_mean']:8.2f} us "
             f"(CI: +/-{r['random_ci']:.2f})"
         )
-
-
+        
 if __name__ == "__main__":
     main()
