@@ -85,8 +85,13 @@ Expected outputs include:
   - RSA-based encryption/decryption mean times and 95% CI
   - SHA-256 mean times and 95% CI
   - AES variability comparison (same file vs random files)
-- Plot file:
-  - `benchmark_plot.png`
+- Plot files (saved in the `plots/` directory):
+  - `plot_all_combined.png`
+  - `plot_aes_enc_dec.png`
+  - `plot_rsa_enc_dec.png`
+  - `plot_aes_vs_rsa.png`
+  - `plot_aes_vs_sha.png`
+  - `plot_sha256.png`
 
 ---
 

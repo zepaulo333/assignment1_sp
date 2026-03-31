@@ -11,4 +11,3 @@ def generate_files():
         filepath = os.path.join(OUTPUT_DIR, f"file_{size}.bin")
         with open(filepath, "wb") as f:
             f.write(os.urandom(size))
-        print(f"  Gerado: {filepath} ({size} bytes)")

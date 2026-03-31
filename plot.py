@@ -1,10 +1,12 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_results(aes_results, rsa_results, sha_results, output_dir="."):
+def plot_results(aes_results, rsa_results, sha_results, output_dir="plots"):
+    os.makedirs(output_dir, exist_ok=True)
     sizes = [r['size'] for r in aes_results]
 
     # Extrair dados

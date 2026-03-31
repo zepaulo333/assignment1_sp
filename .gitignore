@@ -20,10 +20,12 @@ env/
 
 # Generated test files
 test_files/
+*.bin
 
 # Generated outputs
 benchmark_plot.png
 *.png
+plots/
 
 # Jupyter
 .ipynb_checkpoints/
