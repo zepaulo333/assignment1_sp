@@ -131,5 +131,3 @@ def plot_results(aes_results, rsa_results, sha_results, output_dir="."):
     fig.tight_layout()
     fig.savefig(f"{output_dir}/plot_sha256.png", dpi=200)
     plt.close(fig)
-
-    print(f"\n  6 gráficos guardados em {output_dir}/plot_*.png")

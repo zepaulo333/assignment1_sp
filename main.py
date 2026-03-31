@@ -84,25 +84,22 @@ def print_experimental_setup():
 def main():
     print_experimental_setup()
 
-    print("\n[A] Generating test files...")
     generate_files()
 
-    print("\n[B] Running AES-CTR benchmarks...")
+    print("\n[B] AES-CTR benchmarks")
     aes_results = run_aes_benchmark()
 
-    print("\n[B extra] Running AES variability analysis...")
+    print("\n[B extra] AES variability analysis")
     aes_var_results = run_aes_variability_benchmark()
 
     print("\n[C] Generating RSA-2048 keypair...")
     e, d, n = generate_rsa_keypair(2048)
-    print("    Keypair generated. Running RSA benchmarks...")
+    print("    RSA benchmarks...")
     rsa_results = run_rsa_benchmark(e, d, n)
 
-    print("\n[D] Running SHA-256 benchmarks...")
+    print("\n[D] SHA-256 benchmarks")
     sha_results = run_sha_benchmark()
 
-  
-    print("\n[E] Generating plots...")
     plot_results(aes_results, rsa_results, sha_results)
 
     print("\n" + "=" * 55)
@@ -114,8 +111,6 @@ def main():
             f"(CI: +/-{r['same_ci']:.2f}) | random-files: {r['random_mean']:8.2f} us "
             f"(CI: +/-{r['random_ci']:.2f})"
         )
-
-    print("\n=== All benchmarks completed successfully! ===")
 
 
 if __name__ == "__main__":
