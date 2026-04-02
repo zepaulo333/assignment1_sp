@@ -152,6 +152,22 @@ Generating 200 different random files of fixed size is the more realistic model.
 
 By contrast, the random-file scenario captures the true distribution of execution times across varied inputs, making its mean and confidence interval a reliable estimate of what users will observe in practice. The higher variance in this scenario is not a flaw — it is an honest reflection of real-world variability. For benchmarking purposes, the random-file method is therefore the methodologically correct choice.
 
+### Why the remaining benchmarks use a fixed file
+
+If the random-file method is more realistic, why do the RSA and SHA-256 benchmarks (and the main AES benchmark) still use a fixed file per size?
+
+The answer comes directly from what the variability analysis demonstrated: **the two methods produce statistically equivalent means**. The confidence intervals overlap at every file size, and the differences in mean are within normal noise. This is not a coincidence — it is a consequence of a property shared by all three algorithms benchmarked here: **AES-CTR, RSA-based encryption, and SHA-256 are all data-independent**. None of them inspect the content of the input bytes; their execution time is determined entirely by the input length. A file of 32 768 B will take the same amount of time to encrypt or hash regardless of whether it contains random bytes, zeroes, or ASCII text.
+
+Given this, using a fixed file for the remaining benchmarks is not a shortcut that distorts results — the means would be the same either way. What it does change is the variance. With a fixed file, the only source of timing noise is system-level jitter (OS scheduling, CPU cache effects), which is exactly what we want to measure for a fair algorithm comparison. With random files, an extra source of variance is introduced: the cost and memory behaviour of `os.urandom()` generation itself, plus the fact that freshly allocated buffers are not warmed in the CPU cache. This additional variance belongs to the file-generation process, not to the cryptographic algorithm.
+
+For the purpose of the comparative analysis — comparing AES vs RSA vs SHA across different file sizes — we want the tightest, cleanest signal possible. Using a fixed file eliminates this confounding variance and produces narrower confidence intervals, which makes the differences between algorithms easier to detect and interpret. The trade-off is acceptable because:
+
+1. The means are statistically equivalent to what a random-file approach would produce (proven by the variability analysis above).
+2. The algorithms are provably data-independent, so no content bias is introduced.
+3. The fixed file is still a binary file of the exact target size, read from disk once before the timed loop — I/O is not included in the measurement.
+
+In short: the random-file method is the right choice when the question is *"how variable is performance across different inputs?"* — which is what Questions B1 and B2 ask. The fixed-file method is the right choice when the question is *"what is the expected cost of this algorithm at a given size, and how does it compare to another algorithm?"* — which is what the remaining benchmarks ask.
+
 ---
 
 ## Implementation of the RSA function and its inverse with a key with 2048 bits
